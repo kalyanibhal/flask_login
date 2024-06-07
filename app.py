@@ -12,7 +12,7 @@ CORS(app)
 # on the terminal type: curl http://127.0.0.1:5000/
 # returns hello world when we use GET.
 # returns the data that we send when we use POST.
-# @app.route('/') 
+@app.route('/') 
 def index(): 
     return "The server is running"
   
@@ -39,5 +39,6 @@ def login(username, password):
         return jsonify({"Prompt":'User not found or wrong password'})
 
 
-if __name__ == '__main__': 
-    app.run(debug = True) 
+import login_controller
+
+
