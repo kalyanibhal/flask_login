@@ -6,13 +6,13 @@ import sqlite3
 # Connect to the SQLite database
 
 class user_model():
-   
     # this method is called from user_controller file
     def user_addone_model(self,data):    
         user_data = (data['username'], data['password'])
         conn = sqlite3.connect('users_cred.db')
-        conn.execute("INSERT INTO users (username, password) VALUES(?, ?)",user_data)
+        cur = conn.cursor()
+        cur.execute("INSERT INTO users (username, password) VALUES(?, ?)",user_data)
         conn.commit()
         conn.close()
         return "User Created Succesfully"
-    
+        
