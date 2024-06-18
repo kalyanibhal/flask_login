@@ -1,14 +1,26 @@
 """A model file contains an application's data
 logic and the core information that the user can access
 and manipulate:"""
+from app import app
 import sqlite3
 from flask import jsonify
+from flask_sqlalchemy import SQLAlchemy
 # import re  # Import the regular expression module
 
 
-class user_model():
-    # this method is called from user_controller file
-    
+# Imported deployed vercel database
+app.config["SQLALCHEMY_DATABASE_URI"] = "<postgresql://default:IQ8jRn3DteFN@ep-weathered-moon-a4ea5yml.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require>" 
+db = SQLAlchemy(app)
+
+class users(db.Model):
+    username = db.Column(db.String, primary_key=True)
+    password = db.Column(db.String)
+
+# Create database tables in the PostgreSQL database
+with app.app_context():
+    db.create_all()
+
+
     def user_addone_model(self,data):    
         username = data['username']
         password = data['password']
