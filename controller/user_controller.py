@@ -13,35 +13,42 @@ from model.user_model import user_model
 # an object is created
 obj = user_model()
 
+
 # Default route
 @app.route('/') 
 def index(): 
     """To check whether server is live"""
     return "The server is running"
 
+
 # Controller for signing up a user
 @app.route('/user/addone', methods = ['POST'])
 def user_addone_controller():
+    
+    data = request.get_json()
+    username = data["username"]
+    password = data["password"]
+    
     # Ensure username was submitted
-    if not request.form.get("username"):
+    if not username:
         return jsonify({"Prompt":"must provide username"})
 
     # Ensure password was submitted
-    elif not request.form.get("password"):
+    elif not password:
         return jsonify({"Prompt":"must provide password"})
 
     # object calls method
-    return obj.user_addone_model(request.form)
+    return obj.user_addone_model(username, password)
 
-# Controller for loging in
-@app.route('/user/login', methods = ['POST'])
-def user_login_controller():
-    # Ensure username was submitted
-    if not request.form.get("username"):
-        return jsonify({"Prompt":"must provide username"})
+# # Controller for loging in
+# @app.route('/user/login', methods = ['POST'])
+# def user_login_controller():
+#     # Ensure username was submitted
+#     if not request.form.get("username"):
+#         return jsonify({"Prompt":"must provide username"})
 
-    # Ensure password was submitted
-    elif not request.form.get("password"):
-        return jsonify({"Prompt":"must provide password"})
+#     # Ensure password was submitted
+#     elif not request.form.get("password"):
+#         return jsonify({"Prompt":"must provide password"})
         
-    return obj.user_login_model(request.form)
+#     return obj.user_login_model(request.form)

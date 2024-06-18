@@ -1,27 +1,26 @@
 """A model file contains an application's data
 logic and the core information that the user can access
 and manipulate:"""
-from app import app
+
+import os
+import psycopg2 
+from dotenv import load_dotenv
 from flask import jsonify
-from flask_sqlalchemy import SQLAlchemy
-import sqlite3
 
 
+CREATE_users_TABLE=(
+    "CREATE TABLE IF NOT EXISTS users(username PRIMARY KEY, password TEXT)"
+)
+
+load_dotenv()
 
 
+url = os.getenv("POSTGRES_URL")
+connection = psycopg2.connect(url)
 
-# import re  # Import the regular expression module
-# # Imported deployed vercel database
-# app.config["SQLALCHEMY_DATABASE_URI"] = "<>" 
-# db = SQLAlchemy(app)
-
-# class users(db.Model):
-#     username = db.Column(db.String, primary_key=True)
-#     password = db.Column(db.String)
-
-# # Create database tables in the PostgreSQL database
-# with app.app_context():
-#     db.create_all()
+with connection:
+    with connection.cursor() as cursor:
+        cursor.execute(CREATE_users_TABLE)
 
 
 #     def user_addone_model(self,data):    
