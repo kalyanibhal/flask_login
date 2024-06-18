@@ -67,3 +67,5 @@ class user_model():
             return jsonify({"Prompt":"Login Successful"})
         else:        
             return jsonify({"Prompt": "You have entered wrong credentials"})
+
+
