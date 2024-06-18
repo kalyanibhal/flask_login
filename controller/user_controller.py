@@ -4,20 +4,32 @@ It contains the flow control logic for an application
 and determines what response to send to a user when they make
 a browser request"""
 
-
 from flask import request, jsonify
 from app import app
 # here model.user_model points to the file
 # user_model then references the class
 from model.user_model import user_model
-
  
 # an object is created
 obj = user_model()
 
+# Default route
+@app.route('/') 
+def index(): 
+    """To check whether server is live"""
+    return "The server is running"
+
 # Controller for signing up a user
 @app.route('/user/addone', methods = ['POST'])
 def user_addone_controller():
+    # Ensure username was submitted
+    if not request.form.get("username"):
+        return jsonify({"Prompt":"must provide username"})
+
+    # Ensure password was submitted
+    elif not request.form.get("password"):
+        return jsonify({"Prompt":"must provide password"})
+
     # object calls method
     return obj.user_addone_model(request.form)
 

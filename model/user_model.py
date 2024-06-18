@@ -2,80 +2,83 @@
 logic and the core information that the user can access
 and manipulate:"""
 from app import app
-import sqlite3
 from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
+import sqlite3
+
+
+
+
+
 # import re  # Import the regular expression module
+# # Imported deployed vercel database
+# app.config["SQLALCHEMY_DATABASE_URI"] = "<>" 
+# db = SQLAlchemy(app)
+
+# class users(db.Model):
+#     username = db.Column(db.String, primary_key=True)
+#     password = db.Column(db.String)
+
+# # Create database tables in the PostgreSQL database
+# with app.app_context():
+#     db.create_all()
 
 
-# Imported deployed vercel database
-app.config["SQLALCHEMY_DATABASE_URI"] = "<postgresql://default:IQ8jRn3DteFN@ep-weathered-moon-a4ea5yml.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require>" 
-db = SQLAlchemy(app)
+#     def user_addone_model(self,data):    
+#         username = data['username']
+#         password = data['password']
 
-class users(db.Model):
-    username = db.Column(db.String, primary_key=True)
-    password = db.Column(db.String)
-
-# Create database tables in the PostgreSQL database
-with app.app_context():
-    db.create_all()
-
-
-    def user_addone_model(self,data):    
-        username = data['username']
-        password = data['password']
-
-        # Username validation
-        if len(username) < 3:
-            return jsonify({"Prompt":"Username must be at least 3 characters long"})
+#         # Username validation
+#         if len(username) < 3:
+#             return jsonify({"Prompt":"Username must be at least 3 characters long"})
         
-        if not username.isalnum():
-            return jsonify({"Prompt":"Username can only contain alphabets and numbers characters"})
+#         if not username.isalnum():
+#             return jsonify({"Prompt":"Username can only contain alphabets and numbers characters"})
 
-        # Password validation
-        if len(password) < 8:
-            return jsonify({"Prompt":"Password must be at least 8 characters long"})
-        # if not re.search(r'\d', password):
-            # return "Password must contain at least one number"
+#         # Password validation
+#         if len(password) < 8:
+#             return jsonify({"Prompt":"Password must be at least 8 characters long"})
+#         # if not re.search(r'\d', password):
+#             # return "Password must contain at least one number"
 
-        # Generate a tuple containing username and password
-        user_data = (username, password)
+#         # Generate a tuple containing username and password
+#         user_data = (username, password)
         
-        # Connect to the SQLite database
-        con = sqlite3.connect('users_cred.db')
-        cur = con.cursor()
+#         # Connect to the SQLite database
+#         con = sqlite3.connect('users_cred.db')
+#         cur = con.cursor()
 
-        # Check for duplicate username
-        cur.execute("SELECT COUNT(*) FROM users WHERE username = ?", (data['username'],))
-        count = cur.fetchone()[0]
+#         # Check for duplicate username
+#         cur.execute("SELECT COUNT(*) FROM users WHERE username = ?", (data['username'],))
+#         count = cur.fetchone()[0]
 
-        if count > 0:
-            con.close()
-            return jsonify({"Prompt": "Username already taken"})
+#         if count > 0:
+#             con.close()
+#             return jsonify({"Prompt": "Username already taken"})
 
-        # If validation is successful, add user credential to database
-        cur.execute("INSERT INTO users (username, password) VALUES(?, ?)", user_data)
-        con.commit()
-        con.close()
-        return jsonify({"Prompt": "User Created Succesfully"})
+#         # If validation is successful, add user credential to database
+#         cur.execute("INSERT INTO users (username, password) VALUES(?, ?)", user_data)
+#         con.commit()
+#         con.close()
+#         return jsonify({"Prompt": "User Created Succesfully"})
     
         
-    def user_login_model(self, data):
+#     def user_login_model(self, data):
         
-        # Generate a tuple containing username and password
-        user_data = (data["username"], data["password"])
+#         # Generate a tuple containing username and password
+#         user_data = (data["username"], data["password"])
         
-        # Connect to the SQLite database
-        con = sqlite3.connect('users_cred.db')
-        cur = con.cursor()
+#         # Connect to the SQLite database
+#         con = sqlite3.connect('users_cred.db')
+#         cur = con.cursor()
         
 
-        # Check if username and password combination exists
-        cur.execute("SELECT COUNT(*) FROM users WHERE username = ? AND password = ?", (user_data))
-        count = cur.fetchone()[0]
-        con.close()
+#         # Check if username and password combination exists
+#         cur.execute("SELECT COUNT(*) FROM users WHERE username = ? AND password = ?", (user_data))
+#         count = cur.fetchone()[0]
+#         con.close()
 
-        if count > 0:
-            return jsonify({"Prompt":"Login Successful"})
-        else:        
-            return jsonify({"Prompt": "You have entered wrong credentials"})
+#         if count > 0:
+#             return jsonify({"Prompt":"Login Successful"})
+#         else:        
+#             return jsonify({"Prompt": "You have entered wrong credentials"})

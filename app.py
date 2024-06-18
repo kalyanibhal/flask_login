@@ -1,23 +1,32 @@
-# Using flask to make an api 
-# import necessary libraries and functions 
-from flask import Flask, jsonify, request
+# Import necessary libraries and functions 
+import os
+import psycopg2 
+from dotenv import load_dotenv
+from flask import Flask 
 from flask_cors import CORS
 
+CREATE_users_TABLE=(
+    "CREATE TABLE IF NOT EXISTS users(username PRIMARY KEY, password TEXT)"
+)
 
-# creating a Flask app 
+load_dotenv()
+
+
+# Creating a Flask app 
 app = Flask(__name__) 
+url = os.getenv("POSTGRES_URL")
+connection = psycopg2.connect(url)
+
+"""What is Cross-Origin Resource Sharing? Cross-origin 
+resource sharing (CORS) is a mechanism for integrating applications. 
+CORS defines a way for client web applications that are loaded 
+in one domain to interact with resources in a different domain."""
 CORS(app)
 
 
-# on the terminal type: curl http://127.0.0.1:5000/
-# returns hello world when we use GET.
-# returns the data that we send when we use POST.
-@app.route('/') 
-def index(): 
-    """To check whether server is live"""
-    return "The server is running"
-  
-# importing all controllers from controller folder
+
+
+# Importing all controllers from controller folder
 from controller import *
 
 
