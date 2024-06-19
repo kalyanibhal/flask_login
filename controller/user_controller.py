@@ -37,31 +37,31 @@ def user_addone_controller():
     
     # Ensure email was submitted
     if not email:
-        return jsonify({"Prompt":"must provide email"}), 422
+        return jsonify({"Prompt":"must provide email"})
 
     # Ensure password was submitted
     elif not password:
-        return jsonify({"Prompt":"must provide password"}), 422
+        return jsonify({"Prompt":"must provide password"})
 
     # Email validation
     if len(email) < 3:
-        return jsonify({"Prompt":"email must be at least 3 characters long"}), 422
+        return jsonify({"Prompt":"email must be at least 3 characters long"})
 
     if " " in email:
-        return jsonify({"Prompt":"whitespace not allowed"}), 422 
+        return jsonify({"Prompt":"whitespace not allowed"})
         
     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):  
-        return jsonify({"Prompt":"Please enter a valid E-mail"}), 422  
+        return jsonify({"Prompt":"Please enter a valid E-mail"})  
 
     # Password Validation
     if " " in password:
-        return jsonify({"Prompt":"whitespace not allowed"}), 422 
+        return jsonify({"Prompt":"whitespace not allowed"})
 
     pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
         
     if not re.match(pattern, password):
         return jsonify({"Prompt":"The password should contain at least one lowercase letter,\
-                         one uppercase letter, one digit, and one special character"}), 422   
+                         one uppercase letter, one digit, and one special character"})
 
     return obj.user_addone_model(email, password)
 
@@ -77,10 +77,10 @@ def user_login_controller():
 
     # Ensure email was submitted
     if not email:
-        return jsonify({"Prompt":"must provide email"}), 422
+        return jsonify({"Prompt":"must provide email"})
 
     # Ensure password was submitted
     elif not password:
-        return jsonify({"Prompt":"must provide password"}), 422
+        return jsonify({"Prompt":"must provide password"})
         
     return obj.user_login_model(email)

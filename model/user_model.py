@@ -42,7 +42,7 @@ class user_model():
                 
                 # Checking for email in the database
                 if count > 0:
-                    return jsonify({"Prompt": "Email already taken"}), 409
+                    return jsonify({"Prompt": "Email already taken"})
 
                 # PSQL query to add user to database
                 self.cursor.execute("INSERT INTO users (email, password) Values(%s, %s)",(email, password)) 
@@ -64,7 +64,7 @@ class user_model():
                 if count > 0:
                     return jsonify({"Prompt":"Login Successful"}), 200
                 else:        
-                    return jsonify({"Prompt":"You have entered wrong credentials or user doesn't exists"}), 401
+                    return jsonify({"Prompt":"You have entered wrong credentials or user doesn't exists"})
 
             
                 
