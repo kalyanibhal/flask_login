@@ -1,23 +1,17 @@
-# Using flask to make an api 
-# import necessary libraries and functions 
-from flask import Flask         
+# Import necessary libraries and functions 
+from flask import Flask 
 from flask_cors import CORS
 
-# Creating an app 
-# CORS for deployment connectivity(allow all links)
-app = Flask(__name__)
+# Creating a Flask app 
+app = Flask(__name__) 
+
+"""What is Cross-Origin Resource Sharing? Cross-origin 
+resource sharing (CORS) is a mechanism for integrating applications. 
+CORS defines a way for client web applications that are loaded 
+in one domain to interact with resources in a different domain."""
 CORS(app)
 
-
-
-# on the terminal type: curl http://127.0.0.1:5000/
-# returns the data that we send when we use POST.
-@app.route('/') 
-def index(): 
-    """To check whether server is live"""      
-    return "The server is running"
-  
-# importing all controllers from controller folder
+# Importing all controllers from controller folder
 from controller import *
 
 
