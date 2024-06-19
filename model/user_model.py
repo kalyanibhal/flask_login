@@ -32,63 +32,39 @@ class user_model():
         # For establishing the connection
         with self.connection:
             with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as self.cursor:
-                # For PSQL query
-                self.cursor.execute("create table if not exists users(email text primary key, password text)")
+
+                # Check for duplicate email
+                self.cursor.execute("CREATE TABLE IF NOT EXISTS users(email text primary key, password text)")
+                self.cursor.execute("SELECT COUNT(*) FROM users WHERE email = %s", (email,))
+                
+                # Storing first row in count
+                count = self.cursor.fetchone()[0]
+                
+                # Checking for email in the database
+                if count > 0:
+                    return jsonify({"Prompt": "Email already taken"}), 409
+
+                # PSQL query to add user to database
                 self.cursor.execute("INSERT INTO users (email, password) Values(%s, %s)",(email, password)) 
-                return jsonify({"Prompt": "User Created Succesfully"}) 
+                return jsonify({"Prompt": "User Created Succesfully"}) , 201
 
 
-#         email = data['email']
-#         password = data['password']
-
-        
-#         if not email.isalnum():
-#             return jsonify({"Prompt":"email can only contain alphabets and numbers characters"})
-
-#         # Password validation
-#         if len(password) < 8:
-#             return jsonify({"Prompt":"Password must be at least 8 characters long"})
-#         # if not re.search(r'\d', password):
-#             # return "Password must contain at least one number"
-
-#         # Generate a tuple containing email and password
-#         user_data = (email, password)
-        
-#         # Connect to the SQLite database
-#         con = sqlite3.connect('users_cred.db')
-#         cur = con.cursor()
-
-#         # Check for duplicate email
-#         cur.execute("SELECT COUNT(*) FROM users WHERE email = ?", (data['email'],))
-#         count = cur.fetchone()[0]
-
-#         if count > 0:
-#             con.close()
-#             return jsonify({"Prompt": "email already taken"})
-
-#         # If validation is successful, add user credential to database
-#         cur.execute("INSERT INTO users (email, password) VALUES(?, ?)", user_data)
-#         con.commit()
-#         con.close()
-#         return jsonify({"Prompt": "User Created Succesfully"})
+    def user_login_model(self, email):
     
-        
-#     def user_login_model(self, data):
-        
-#         # Generate a tuple containing email and password
-#         user_data = (data["email"], data["password"])
-        
-#         # Connect to the SQLite database
-#         con = sqlite3.connect('users_cred.db')
-#         cur = con.cursor()
-        
+        with self.connection:
+            with self.connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as self.cursor:
 
-#         # Check if email and password combination exists
-#         cur.execute("SELECT COUNT(*) FROM users WHERE email = ? AND password = ?", (user_data))
-#         count = cur.fetchone()[0]
-#         con.close()
+                # Check if email exists
+                self.cursor.execute("SELECT COUNT(*) FROM users WHERE email = %s", (email,))
 
-#         if count > 0:
-#             return jsonify({"Prompt":"Login Successful"})
-#         else:        
-#             return jsonify({"Prompt": "You have entered wrong credentials"})
+                # Storing first row in count
+                count = self.cursor.fetchone()[0]
+                
+                # Checking user credentials
+                if count > 0:
+                    return jsonify({"Prompt":"Login Successful"}), 200
+                else:        
+                    return jsonify({"Prompt":"You have entered wrong credentials or user doesn't exists"}), 401
+
+            
+                

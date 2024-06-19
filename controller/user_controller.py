@@ -29,55 +29,58 @@ def index():
 # Controller for signing up a user
 @app.route('/user/addone', methods = ['POST'])
 def user_addone_controller():
-    
+
+    # Storing recieved data in variable
     data = request.get_json()
     email = data["email"]
     password = data["password"]
     
     # Ensure email was submitted
     if not email:
-        return jsonify({"Prompt":"must provide email"})
+        return jsonify({"Prompt":"must provide email"}), 422
 
     # Ensure password was submitted
     elif not password:
-        return jsonify({"Prompt":"must provide password"})
+        return jsonify({"Prompt":"must provide password"}), 422
 
     # Email validation
     if len(email) < 3:
-        return jsonify({"Prompt":"email must be at least 3 characters long"})
+        return jsonify({"Prompt":"email must be at least 3 characters long"}), 422
 
     if " " in email:
-        return jsonify({"Prompt":"whitespace not allowed"})  
+        return jsonify({"Prompt":"whitespace not allowed"}), 422 
         
     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):  
-        return jsonify({"Prompt":"Please enter a valid E-mail"})  
+        return jsonify({"Prompt":"Please enter a valid E-mail"}), 422  
 
     # Password Validation
     if " " in password:
-        return jsonify({"Prompt":"whitespace not allowed"})  
+        return jsonify({"Prompt":"whitespace not allowed"}), 422 
 
     pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
         
     if not re.match(pattern, password):
-        return jsonify({"Prompt":"The password should contain at least one lowercase letter, one uppercase letter, one digit, and one special character"})  
+        return jsonify({"Prompt":"The password should contain at least one lowercase letter,\
+                         one uppercase letter, one digit, and one special character"}), 422   
 
     return obj.user_addone_model(email, password)
 
 
 # Controller for logging in
-@app.route('/user/login')
+@app.route('/user/login', methods = ['GET'])
 def user_login_controller():
 
+    # Storing recieved data in variable
     data = request.get_json()
     email = data["email"]
     password = data["password"]
 
     # Ensure email was submitted
-    if not request.form.get("email"):
-        return jsonify({"Prompt":"must provide email"})
+    if not email:
+        return jsonify({"Prompt":"must provide email"}), 422
 
     # Ensure password was submitted
-    elif not request.form.get("password"):
-        return jsonify({"Prompt":"must provide password"})
+    elif not password:
+        return jsonify({"Prompt":"must provide password"}), 422
         
-    return obj.user_login_model(request.form)
+    return obj.user_login_model(email)
