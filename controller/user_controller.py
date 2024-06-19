@@ -22,7 +22,7 @@ def user_addone_controller():
     return obj.user_addone_model(request.form)
 
 # Controller for loging in
-@app.route('/user/login', methods = ['POST'])
+@app.route('/user/login',  methods= ['POST'])
 def user_login_controller():
     # Ensure username was submitted
     if not request.form.get("username"):
