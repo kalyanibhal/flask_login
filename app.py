@@ -9,7 +9,7 @@ app = Flask(__name__)
 with open('config.json','r')as f:
     params=json.load(f)['param']
 
-mail=Mail(app)    
+mail= Mail(app)    
 
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
