@@ -12,6 +12,7 @@ import psycopg2.extras # Allows referencing as dictionary
 from dotenv import load_dotenv
 from flask import jsonify
 
+
 class user_model():
 
     # Constructor
@@ -68,3 +69,6 @@ class user_model():
 
             
                 
+
+
+    

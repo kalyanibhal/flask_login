@@ -14,7 +14,10 @@ from app import app
 # here model.user_model points to the file
 # user_model then references the class
 from model.user_model import user_model
- 
+from flask_mail import *
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 # an object is created
 obj = user_model()
 
@@ -84,3 +87,5 @@ def user_login_controller():
         return jsonify({"Prompt":"must provide password"})
         
     return obj.user_login_model(email)
+
+
