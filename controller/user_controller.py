@@ -15,8 +15,7 @@ from app import app
 # user_model then references the class
 from model.user_model import user_model
 from flask_mail import *
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+from flask_jwt_extended import decode_token
 
 # an object is created
 obj = user_model()

@@ -3,7 +3,8 @@ A model file contains an application's data
 logic and the core information that the user can access
 and manipulate
 
-Data Verification should be carried out here. 
+Data Verification should be carried out here
+(database). 
 """
 
 import os # For accessing environment variable
@@ -66,6 +67,9 @@ class user_model():
                     return jsonify({"Prompt":"Login Successful"}), 200
                 else:        
                     return jsonify({"Prompt":"You have entered wrong credentials or user doesn't exists"})
+                
+
+    
 
             
                 
