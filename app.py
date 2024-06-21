@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify ,json
 from flask_mail import Mail, Message
 from flask_jwt_extended import JWTManager, create_access_token, decode_token#used for creating and verifying JWT tokens
 from flask_cors import CORS
-from itsdangerous import URLSafeTimedSerializer 
 import datetime
 
 #URLSafeTimedSerializer to generate token
@@ -64,7 +63,7 @@ def sendverifylink():
 
     #Generate the Verification URL
 
-    verification_url = f"http://yourdomain.com/verify/{verification_token}"
+    verification_url = f"http://127.0.0.1:5000/verify/{verification_token}"
 
     # sending mail 
     msg = Message('Email Verification', recipients=[gmail])
@@ -75,16 +74,32 @@ def sendverifylink():
     return jsonify({"message": "Verification email sent"}), 200
 
 @app.route('/verify/<token>', methods=['GET'])
+
 def verify_email(token):
     try:
         # Decode the token to get the email
         decoded_token = decode_token(token) # Decode the JWT token that was passed as a parameter in the URL
         email = decoded_token['sub'] # Extract the email from the decoded token
-        return jsonify({"message": f"Email {email} verified successfully!"}), 200
+
+
+        # Update the database to mark email as verified
+        user = User.query.filter_by(email=email).first()
+        if user:
+            user.verified = True
+            db.session.commit()
+            return jsonify({"message": f"Email {email} verified successfully!"}), 200
+        else:
+            return jsonify({"error": "User not found"}), 404
+
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
 
+#verfication> database table ek coloum dalenge gmailverfication
+#  user click  > user display verification successful (frontend )
+#> database update hoga status done u
+#user login again 
+#verified done> acess granted else go to gmail and verify again
 
 
 
@@ -97,7 +112,8 @@ def verify_email(token):
 
 
 
-    """token=s.dumps(gmail,salt='email-confirmation-key')
+
+"""token=s.dumps(gmail,salt='email-confirmation-key')
     
     msg=Message('Important Mail',sender='daniyasiddiqui2319@gmail.com',recipients=['danishgreets@gmail.com'])
     link=url_for('confirm',token=token,_external=True)

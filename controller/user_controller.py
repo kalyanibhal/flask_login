@@ -14,8 +14,6 @@ from app import app
 # here model.user_model points to the file
 # user_model then references the class
 from model.user_model import user_model
-from flask_mail import *
-from flask_jwt_extended import decode_token
 
 # an object is created
 obj = user_model()
