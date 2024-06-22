@@ -14,7 +14,7 @@ from app import app
 # here model.user_model points to the file
 # user_model then references the class
 from model.user_model import user_model
- 
+
 # an object is created
 obj = user_model()
 
@@ -84,3 +84,5 @@ def user_login_controller():
         return jsonify({"Prompt":"must provide password"})
         
     return obj.user_login_model(email)
+
+
