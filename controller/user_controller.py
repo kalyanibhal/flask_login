@@ -86,3 +86,49 @@ def user_login_controller():
     return obj.user_login_model(email)
 
 
+# #controller for sending email
+# @app.route('/sendverifylink',methods=["POST"] )
+# def sendverifylink():
+#     #fetch the email id
+#     data = request.get_json()
+#     gmail = data["email"]
+
+#     if not gmail:
+#         return jsonify({"error": "Email is required"}), 400
+    
+#     # Create a jwt verification token with an expiration time
+#     expires = datetime.timedelta(hours=1)
+#     verification_token = create_access_token(identity=gmail, expires_delta=expires)
+
+#     #Generate the Verification URL
+
+#     verification_url = f"http://127.0.0.1:5000/verify/{verification_token}"
+
+#     # sending mail 
+#     msg = Message('Email Verification', recipients=[gmail])
+#     msg.body = f'Please verify your email by clicking on the following link: {verification_url}'
+#     #Send the Email
+#     mail.send(msg)
+
+#     return jsonify({"message": "Verification email sent"}), 200
+
+# @app.route('/verify/<token>', methods=['GET'])
+
+# def verify_email(token):
+#     try:
+#         # Decode the token to get the email
+#         decoded_token = decode_token(token) # Decode the JWT token that was passed as a parameter in the URL
+#         email = decoded_token['sub'] # Extract the email from the decoded token
+
+
+#         # Update the database to mark email as verified
+#         user = User.query.filter_by(email=email).first()
+#         if user:
+#             user.verified = True
+#             db.session.commit()
+#             return jsonify({"message": f"Email {email} verified successfully!"}), 200
+#         else:
+#             return jsonify({"error": "User not found"}), 404
+
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 400
