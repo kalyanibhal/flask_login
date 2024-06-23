@@ -65,7 +65,6 @@ class user_model():
                 if count > 0:
                     cursor.execute("SELECT is_active FROM users WHERE email = %s", (email,))
                     is_active = cursor.fetchone()[0]
-                    print(is_active)
                     # Checking if account is verified or not
                     if is_active == True: 
                         return jsonify({"Prompt":"Login Successful"})

@@ -32,7 +32,6 @@ def generate_confirmation_token(email):
 
 def send_confirmation_email(user_email):
     token = generate_confirmation_token(user_email) 
-    print(token)
     confirm_url = url_for('confirm_email', token=token, _external=True)
     text_body = f'Please click the link to verify your email: {confirm_url}'
     send_email(user_email, "Please confirm your email", text_body)
@@ -52,4 +51,4 @@ def confirm_email(token):
             return jsonify({"Prompt": "Can't access DB"})
         return render_template("confirmation.html") 
     except SignatureExpired:
-        return jsonify({"message": "The confirmation link has expired."}), 400
+        return jsonify({"Prompt": "The confirmation link has expired."}), 400
