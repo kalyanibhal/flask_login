@@ -22,6 +22,7 @@ class user_model():
     def user_addone_model(self, email, password):    
         # For establishing the connection
         url = os.getenv("POSTGRES_URL")
+        print(url)
         connection = psycopg2.connect(url)
         with connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
@@ -57,17 +58,21 @@ class user_model():
                 # Check if email exists
                 cursor.execute("SELECT COUNT(*) FROM users WHERE email = %s", (email,))
 
-                # Storing first row in count
+                # Storing count of occurence
                 count = cursor.fetchone()[0]
-                        
+
                 # Checking user credentials
                 if count > 0:
-                    count = cursor.fetchone()['is_active']
+                    cursor.execute("SELECT is_active FROM users WHERE email = %s", (email,))
+                    is_active = cursor.fetchone()[0]
+                    print(is_active)
                     # Checking if account is verified or not
-                    if count == 1: 
+                    if is_active == True: 
                         return jsonify({"Prompt":"Login Successful"})
                     else:
-                        return jsonify({"Prompt":"Please verify your account"})
+                        # Send email with confirmation link
+                        mail_controller.send_confirmation_email(email)
+                        return jsonify({"Prompt":"Please verify your account. A new verification link has been sent"})
                 else:        
                     return jsonify({"Prompt":"You have entered wrong credentials or user doesn't exists"})
 

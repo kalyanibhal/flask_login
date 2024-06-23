@@ -1,4 +1,4 @@
-from flask import json, url_for, jsonify
+from flask import json, url_for, jsonify, render_template
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from app import app
@@ -20,7 +20,7 @@ app.config['MAIL_USE_TLS']=True
 app.config['MAIL_DEBUG'] = True   # always add this
 app.config["secret_key"]="secret"
 app.config['MAIL_DEFAULT_SENDER'] = params['gmail-user']
-app.config['SECURITY_PASSWORD_SALT'] = ['password salt']
+app.config['SECURITY_PASSWORD_SALT'] = 'password salt'
 
 # Initialize Flask-Mail after configuration  
 mail= Mail(app) 
@@ -41,15 +41,15 @@ def send_email(to, subject, body):
     msg = Message(subject, recipients=[to], body=body, sender=app.config['MAIL_USERNAME'])
     mail.send(msg)
 
-@app.route('/confirm/<token>', methods=['PUT'])
+@app.route('/confirm/<token>', methods=['GET'])
 def confirm_email(token):
     try:
         email = serializer.loads(token, salt=app.config['SECURITY_PASSWORD_SALT'], max_age=3600)
         try:
-            # Changing verification statur in DB
+            # Changing verification status in DB
             obj.user_verification_model(email)        
         except:
             return jsonify({"Prompt": "Can't access DB"})
-        return jsonify({"Prompt": "Your email has been confirmed!"}), 200
+        return render_template("confirmation.html") 
     except SignatureExpired:
         return jsonify({"message": "The confirmation link has expired."}), 400
