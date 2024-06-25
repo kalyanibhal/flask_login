@@ -13,6 +13,7 @@ import psycopg2 # Driver to interact with PSQL
 import psycopg2.extras # Allows referencing as dictionary
 from dotenv import load_dotenv
 from flask import jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 
@@ -40,14 +41,14 @@ class user_model():
                     return jsonify({"Prompt": "Email already taken"})
 
                 # PSQL query to add user to database
-                cursor.execute("INSERT INTO users (email, password) Values(%s, %s)",(email, password)) 
+                cursor.execute("INSERT INTO users (email, password) Values(%s, %s)",(email, generate_password_hash(password))) 
 
                 # Send email with confirmation link
                 mail_controller.send_confirmation_email(email) 
                 return jsonify({"Prompt": "A confirmation email has been sent to registered Email"})
 
     # Checking for existing user
-    def user_login_model(self, email):
+    def user_login_model(self, email, password):
     
         # Establishing Connection
         url = os.getenv("POSTGRES_URL")
@@ -56,24 +57,24 @@ class user_model():
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
 
                 # Check if email exists
-                cursor.execute("SELECT COUNT(*) FROM users WHERE email = %s", (email,))
+                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
 
                 # Storing count of occurence
-                count = cursor.fetchone()[0]
+                row = cursor.fetchone()
 
                 # Checking user credentials
-                if count > 0:
-                    cursor.execute("SELECT is_active FROM users WHERE email = %s", (email,))
-                    is_active = cursor.fetchone()[0]
-                    # Checking if account is verified or not
-                    if is_active == True: 
-                        return jsonify({"Prompt":"Login Successful"})
-                    else:
-                        # Send email with confirmation link
-                        mail_controller.send_confirmation_email(email)
-                        return jsonify({"Prompt":"Please verify your account. A new verification link has been sent"})
-                else:        
+                if row is None or not check_password_hash(row["password"], password):
                     return jsonify({"Prompt":"You have entered wrong credentials or user doesn't exists"})
+                    
+                # Checking whether account is verified or not
+                is_active = row["is_active"] 
+                
+                if is_active == True: 
+                    return jsonify({"Prompt":"Login Successful"})
+                else:
+                    # Send email with confirmation link
+                    mail_controller.send_confirmation_email(email)
+                    return jsonify({"Prompt":"Please verify your account. A new verification link has been sent"})
 
     # Changing verification status                
     def user_verification_model(self, email):

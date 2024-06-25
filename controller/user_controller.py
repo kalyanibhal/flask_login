@@ -83,7 +83,7 @@ def user_login_controller():
     elif not password:
         return jsonify({"Prompt":"must provide password"})
         
-    return obj.user_login_model(email)
+    return obj.user_login_model(email, password)
 
 
 
