@@ -86,12 +86,14 @@ def user_login_controller():
     return obj.user_login_model(email, password)
 
 
-# Controller for deleting a user Credentials
+# Controller for deleting a user
 @app.route('/user/delete', methods=['DELETE'])
 def delete_account():
+
   # Storing recieved data in variable
     data = request.get_json()
     email = data["email"]
+    
     if not email:
          return jsonify({'Prompt': 'Email is required'}), 400
     

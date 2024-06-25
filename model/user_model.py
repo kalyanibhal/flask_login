@@ -88,7 +88,7 @@ class user_model():
                 cursor.execute("UPDATE users SET is_active = TRUE WHERE email = %s",(email,))
         
 
-# deleting a user credenials
+    # Delete user credentials
     def user_delete_model(self,email):
       
         # Establishing Connection
@@ -103,14 +103,12 @@ class user_model():
                 # Storing count of occurence
                 user = cursor.fetchone()
     
-                if not user:
-        
+                if not user:        
                     return jsonify({'Prompt': 'User not found'}), 404
 
                 # deleteing the user 
                 cursor.execute("DELETE FROM users WHERE email = %s", (email,))
-                connection.commit()  
-                return jsonify({'Prompt': 'User deleted successfully'})    
+                return jsonify({'Prompt': 'User deleted successfully'})    
 
             
                 
