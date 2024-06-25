@@ -7,7 +7,6 @@ Data Verification should be carried out here
 (database). 
 """
 
-from controller import mail_controller
 import os # For accessing environment variable
 import psycopg2 # Driver to interact with PSQL
 import psycopg2.extras # Allows referencing as dictionary
@@ -26,7 +25,7 @@ class user_model():
         connection = psycopg2.connect(url)
         with connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-
+                from controller import mail_controller
                 # Check for duplicate email
                 cursor.execute("CREATE TABLE IF NOT EXISTS users(email TEXT PRIMARY KEY,\
                                 password TEXT, is_active BOOLEAN DEFAULT FALSE)")
@@ -54,7 +53,7 @@ class user_model():
         connection = psycopg2.connect(url)
         with connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-
+                from controller import mail_controller
                 # Check if email exists
                 cursor.execute("SELECT COUNT(*) FROM users WHERE email = %s", (email,))
 
@@ -88,7 +87,29 @@ class user_model():
                 cursor.execute("UPDATE users SET is_active = TRUE WHERE email = %s",(email,))
         
 
+# deleting a user credenials
+    def user_delete_model(self,email):
+      
+        # Establishing Connection
+        url = os.getenv("POSTGRES_URL")
+        connection = psycopg2.connect(url)
+        with connection:
+            with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+
+                # checking email
+                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+
+                # Storing count of occurence
+                user = cursor.fetchone()
     
+                if not user:
+        
+                    return jsonify({'Prompt': 'User not found'}), 404
+
+                # deleteing the user 
+                cursor.execute("DELETE FROM users WHERE email = %s", (email,))
+                connection.commit()  
+                return jsonify({'Prompt': 'User deleted successfully'})    
 
             
                 
