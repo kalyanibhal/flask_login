@@ -110,6 +110,40 @@ class user_model():
                 cursor.execute("DELETE FROM users WHERE email = %s", (email,))
                 return jsonify({'Prompt': 'User deleted successfully'})    
 
+# verifying user credentials for forget password          
+    def user_forget_model(self,email):
+      
+        # Establishing Connection
+        url = os.getenv("POSTGRES_URL")
+        connection = psycopg2.connect(url)
+        with connection:
+            with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                from controller import reset_email_controller
+                # checking email
+                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+
+                # Storing count of occurence
+                user = cursor.fetchone()
+    
+                if user:  
+                     # Send email with confirmation link
+                    reset_email_controller.send_reset_email(email)       
+                    return jsonify({'Prompt': 'Reset email sent sucessfully'})
+
+                if not user:        
+                    return jsonify({'Prompt': 'User not found please enter a valid email'}), 404           
+
+
+# Changing password status                 
+
+    def user_resetpass_model(self, email,password):   
+    # Establishing Connection
+        url = os.getenv("POSTGRES_URL")
+        connection = psycopg2.connect(url)
+        with connection:
+            with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                from controller import reset_email_controller
+                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
             
                 
 

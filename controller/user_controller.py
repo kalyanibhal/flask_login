@@ -99,5 +99,15 @@ def delete_account():
     
     return obj.user_delete_model(email)
 
+# Controller for forget password
 
+@app.route('/user/forget', methods=['GET'])
+def forget_password():
+   # Storing recieved data in variable
+    data = request.get_json()
+    email = data["email"]
 
+    if not email:
+         return jsonify({'Prompt': 'Email is required'}), 400
+    
+    return obj.user_forget_model(email)
