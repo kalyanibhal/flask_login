@@ -11,7 +11,7 @@ import os # For accessing environment variable
 import psycopg2 # Driver to interact with PSQL
 import psycopg2.extras # Allows referencing as dictionary
 from dotenv import load_dotenv
-from flask import jsonify
+from flask import jsonify, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
@@ -89,7 +89,7 @@ class user_model():
         
 
     # Delete user credentials
-    def user_delete_model(self,email):
+    def user_delete_model(self, email):
       
         # Establishing Connection
         url = os.getenv("POSTGRES_URL")
@@ -110,42 +110,43 @@ class user_model():
                 cursor.execute("DELETE FROM users WHERE email = %s", (email,))
                 return jsonify({'Prompt': 'User deleted successfully'})    
 
-# verifying user credentials for forget password          
-    def user_forget_model(self,email):
+    # Verifying user credentials for forget password          
+    def user_forget_model(self, email):
       
         # Establishing Connection
         url = os.getenv("POSTGRES_URL")
+        print(url)
         connection = psycopg2.connect(url)
         with connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                from controller import reset_email_controller
+                from controller import mail_controller 
+
                 # checking email
                 cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
 
-                # Storing count of occurence
+                # Storing row
                 user = cursor.fetchone()
     
                 if user:  
                      # Send email with confirmation link
-                    reset_email_controller.send_reset_email(email)       
+                    mail_controller.send_reset_email(email)       
                     return jsonify({'Prompt': 'Reset email sent sucessfully'})
 
                 if not user:        
                     return jsonify({'Prompt': 'User not found please enter a valid email'}), 404           
 
 
-# Changing password status                 
+    # Changing password status                 
+    def user_resetpass_model(self, email, password):   
 
-    def user_resetpass_model(self, email,password):   
     # Establishing Connection
         url = os.getenv("POSTGRES_URL")
         connection = psycopg2.connect(url)
         with connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
-                from controller import reset_email_controller
-                cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-            
-                
+
+                # Update the user's password in the database
+                cursor.execute("UPDATE users SET password = %s WHERE email = %s", (generate_password_hash(password),email))          
 
 
     

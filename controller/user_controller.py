@@ -99,11 +99,11 @@ def delete_account():
     
     return obj.user_delete_model(email)
 
-# Controller for forget password
-
-@app.route('/user/forget', methods=['GET'])
+# Controller for forgot password
+@app.route('/user/forgotpass', methods=['POST'])
 def forget_password():
-   # Storing recieved data in variable
+
+    # Storing recieved data in variable
     data = request.get_json()
     email = data["email"]
 
