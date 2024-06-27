@@ -6,11 +6,11 @@ and manipulate
 Data Verification should be carried out here
 (database). 
 """
-import re
+import re # For regular expression
 import os # For accessing environment variable
 import psycopg2 # Driver to interact with PSQL
 import psycopg2.extras # Allows referencing as dictionary
-from dotenv import load_dotenv
+from dotenv import load_dotenv # Allows loading environment variables
 from flask import jsonify 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -31,7 +31,7 @@ class user_model():
                                 password TEXT, is_active BOOLEAN DEFAULT FALSE)")
                 cursor.execute("SELECT COUNT(*) FROM users WHERE email = %s", (email,))
                 
-                # Storing first row in count
+                # Storing in count
                 count = cursor.fetchone()[0]
                 
                 # Checking for email in the database
@@ -45,6 +45,7 @@ class user_model():
                 mail_controller.send_confirmation_email(email) 
                 return jsonify({"Prompt": "A confirmation email has been sent to registered Email"})
 
+
     # Checking for existing user
     def user_login_model(self, email, password):
     
@@ -57,7 +58,7 @@ class user_model():
                 # Check if email exists
                 cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
 
-                # Storing count of occurence
+                # Storing tuple in row 
                 row = cursor.fetchone()
 
                 # Checking user credentials
@@ -69,6 +70,7 @@ class user_model():
                 
                 if is_active == True: 
                     return jsonify({"Prompt":"Login Successful"})
+
                 else:
                     # Send email with confirmation link
                     mail_controller.send_confirmation_email(email)
@@ -98,7 +100,7 @@ class user_model():
                 # checking email
                 cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
 
-                # Storing count of occurence
+                # Storing tuple in row
                 user = cursor.fetchone()
     
                 if not user:        

@@ -11,8 +11,6 @@ Data Validation should be carried out here
 import re
 from flask import request, jsonify
 from app import app
-# here model.user_model points to the file
-# user_model then references the class
 from model.user_model import user_model
 
 # an object is created

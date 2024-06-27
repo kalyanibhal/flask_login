@@ -1,4 +1,4 @@
-from flask import json, url_for, jsonify, render_template, request
+from flask import url_for, jsonify, render_template, request
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from app import app
@@ -55,6 +55,7 @@ def send_confirmation_email(user_email):
     send_email(user_email, "Please confirm your email", text_body)
 
 
+# Route for confirming and account
 @app.route('/confirm/<token>', methods=['GET'])
 def confirm_email(token):
     try:
@@ -68,6 +69,8 @@ def confirm_email(token):
     except SignatureExpired:
         return jsonify({"Prompt": "The confirmation link has expired."}), 400
 
+
+# Route for resetting account password
 @app.route('/reset/<token>', methods=['GET', 'POST'])
 def reset_email(token):
     try:
