@@ -3,24 +3,32 @@ from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from app import app
 from model.user_model import user_model
+import os
+from dotenv import load_dotenv
+
 
 # an object is created
 obj = user_model()
 
-# Loading configuration from config.json
-with open('config.json','r')as f:
-    params=json.load(f)['param']
+# Loading environment variables
+load_dotenv
+
+# Importing envirnoment variables
+mail_username = os.getenv("GMAIL_USER")
+mail_password = os.getenv("GMAIL_PASSWORD")
+secret_key = os.getenv("SECRET_KEY")
+security_password_salt = os.getenv("SECURITY_PASSWORD_SALT")
 
 # Configuring Flask-Mail
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT']=587
-app.config['MAIL_USERNAME']=params['gmail-user']
-app.config['MAIL_PASSWORD']=params['gmail-password']
-app.config['MAIL_USE_TLS']=True
+app.config['MAIL_USERNAME'] = mail_username
+app.config['MAIL_PASSWORD'] = mail_password
+app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_DEBUG'] = True   # always add this
-app.config["secret_key"]="secret"
-app.config['MAIL_DEFAULT_SENDER'] = params['gmail-user']
-app.config['SECURITY_PASSWORD_SALT'] = 'password salt'
+app.config["secret_key"] = secret_key 
+app.config['MAIL_DEFAULT_SENDER'] = mail_username
+app.config['SECURITY_PASSWORD_SALT'] = security_password_salt
 
 # Initialize Flask-Mail after configuration  
 mail= Mail(app) 

@@ -11,7 +11,7 @@ import os # For accessing environment variable
 import psycopg2 # Driver to interact with PSQL
 import psycopg2.extras # Allows referencing as dictionary
 from dotenv import load_dotenv
-from flask import jsonify, render_template
+from flask import jsonify 
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
@@ -22,7 +22,6 @@ class user_model():
     def user_addone_model(self, email, password):    
         # For establishing the connection
         url = os.getenv("POSTGRES_URL")
-        print(url)
         connection = psycopg2.connect(url)
         with connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
@@ -86,7 +85,6 @@ class user_model():
 
                 # Update user verification status
                 cursor.execute("UPDATE users SET is_active = TRUE WHERE email = %s",(email,))
-        
 
     # Delete user credentials
     def user_delete_model(self, email):
@@ -115,7 +113,6 @@ class user_model():
       
         # Establishing Connection
         url = os.getenv("POSTGRES_URL")
-        print(url)
         connection = psycopg2.connect(url)
         with connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:

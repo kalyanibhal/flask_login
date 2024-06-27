@@ -1,5 +1,5 @@
 # Import necessary libraries and functions 
-from flask import Flask, json
+from flask import Flask 
 from flask_cors import CORS
 
 # Creating a Flask app 
@@ -15,34 +15,3 @@ CORS(app)
 
 # Importing all controllers from controller folder
 from controller import *
-
-
-#verfication> database table ek coloum dalenge gmailverfication
-#  user click  > user display verification successful (frontend )
-#> database update hoga status done u
-#user login again 
-#verified done> acess granted else go to gmail and verify again
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""token=s.dumps(gmail,salt='email-confirmation-key')
-    
-    msg=Message('Important Mail',sender='daniyasiddiqui2319@gmail.com',recipients=['danishgreets@gmail.com'])
-    link=url_for('confirm',token=token,_external=True)
-    msg.body="your confirmation link"+ link
-    mail.send(msg)
-    return "mail"
-    return """
-
-
-
