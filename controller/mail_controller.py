@@ -69,10 +69,9 @@ def reset_email(token):
             if new_password:
                 # Change the password in the database
                 try:
-                    obj.user_resetpass_model(email, new_password)
+                    return obj.user_resetpass_model(email, new_password)
                 except:
                     return jsonify({"Prompt": "Can't change password, please try later"}), 500
-                return jsonify({"Prompt": "Password has been updated successfully"}), 200
             else:
                 return jsonify({"Prompt": "Password not provided"}), 400
         return render_template("setnewpassword.html")

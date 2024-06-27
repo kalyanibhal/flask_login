@@ -161,6 +161,7 @@ class user_model():
 
                 # Update the user's password in the database
                 cursor.execute("UPDATE users SET password = %s WHERE email = %s", (generate_password_hash(password),email))          
+                return jsonify({"Prompt": "Password has been updated successfully"}), 200
 
 
     
