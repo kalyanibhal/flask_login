@@ -63,8 +63,7 @@ def user_addone_controller():
     pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
         
     if not re.match(pattern, password):
-        return jsonify({"Prompt":"The password should contain at least one lowercase letter,\
-                         one uppercase letter, one digit, and one special character"})
+        return jsonify({"Prompt":"The password should contain at least one lowercase letter, one uppercase letter, one digit, and one special character"})
 
     return obj.user_addone_model(email, password)
 

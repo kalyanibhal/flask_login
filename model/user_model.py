@@ -156,8 +156,7 @@ class user_model():
                 pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
         
                 if not re.match(pattern, password):
-                    return jsonify({"Prompt":"The password should contain at least one lowercase letter,\
-                                    one uppercase letter, one digit, and one special character"})
+                    return jsonify({"Prompt":"The password should contain at least one lowercase letter, one uppercase letter, one digit, and one special character"})
 
                 # Update the user's password in the database
                 cursor.execute("UPDATE users SET password = %s WHERE email = %s", (generate_password_hash(password),email))          
