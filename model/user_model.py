@@ -6,7 +6,7 @@ and manipulate
 Data Verification should be carried out here
 (database). 
 """
-
+import re
 import os # For accessing environment variable
 import psycopg2 # Driver to interact with PSQL
 import psycopg2.extras # Allows referencing as dictionary
@@ -144,6 +144,20 @@ class user_model():
         connection = psycopg2.connect(url)
         with connection:
             with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+                
+                # Ensure password was submitted
+                if not password:
+                    return jsonify({"Prompt":"must provide password"})
+
+                # Password Validation
+                if " " in password:
+                    return jsonify({"Prompt":"whitespace not allowed"})
+
+                pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+        
+                if not re.match(pattern, password):
+                    return jsonify({"Prompt":"The password should contain at least one lowercase letter,\
+                                    one uppercase letter, one digit, and one special character"})
 
                 # Update the user's password in the database
                 cursor.execute("UPDATE users SET password = %s WHERE email = %s", (generate_password_hash(password),email))          
