@@ -43,9 +43,10 @@ def user_addone_controller():
     elif not password:
         return jsonify({"Prompt":"must provide password"})
 
-    # Email validation
-    email = email.lower()
+    # Normalize Email    
+    email = email.lower()# Email validation
 
+    # Email validation
     if len(email) < 3:
         return jsonify({"Prompt":"email must be at least 3 characters long"})
 
@@ -84,7 +85,8 @@ def user_login_controller():
     # Ensure password was submitted
     elif not password:
         return jsonify({"Prompt":"must provide password"})
-
+ 
+    # Normalize Email    
     email = email.lower()
         
     return obj.user_login_model(email, password)
@@ -101,6 +103,7 @@ def delete_account():
     if not email:
          return jsonify({'Prompt': 'Email is required'}), 400
 
+    # Normalize Email    
     email = email.lower()
 
     return obj.user_delete_model(email)
@@ -115,7 +118,8 @@ def forget_password():
 
     if not email:
          return jsonify({'Prompt': 'Email is required'}), 400
-    
+
+    # Normalize Email    
     email = email.lower()
     
     return obj.user_forget_model(email)
