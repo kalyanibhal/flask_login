@@ -11,7 +11,7 @@ import os # For accessing environment variable
 import psycopg2 # Driver to interact with PSQL
 import psycopg2.extras # Allows referencing as dictionary
 from dotenv import load_dotenv # Allows loading environment variables
-from flask import jsonify 
+from flask import jsonify, render_template 
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
@@ -159,7 +159,7 @@ class user_model():
 
                 # Update the user's password in the database
                 cursor.execute("UPDATE users SET password = %s WHERE email = %s", (generate_password_hash(password),email))          
-                return jsonify({"Prompt": "Password has been updated successfully"}), 200
+                return render_template("passwordupdated.html"), 200
 
 
     
