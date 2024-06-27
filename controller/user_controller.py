@@ -67,7 +67,7 @@ def user_addone_controller():
 
 
 # Controller for logging in
-@app.route('/user/login', methods = ['GET'])
+@app.route('/user/login', methods = ['POST'])
 def user_login_controller():
 
     # Storing recieved data in variable
